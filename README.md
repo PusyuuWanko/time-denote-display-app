@@ -4,3 +4,6 @@
 このアプリの特徴はインストール不要で、ブラウザが入っているデバイスではほぼ動作します。
 
 使い方はtime_denote_display_app.htmlを開くだけです。
+動かなかった場合はtime_denote_display_app_all_file_var_.htmlを開いてください。
+
+※OSによっては機能しない場合があります。
