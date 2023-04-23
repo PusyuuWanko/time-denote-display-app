@@ -17,6 +17,11 @@ function updateClock() {
     my_audio.currentTime = 0;
     my_audio.play();
   }
+  if (minutes === 30 && seconds === 0) {
+    const my_audio = new Audio("2.mp3");
+    my_audio.currentTime = 0;
+    my_audio.play();
+  }
 }
 setInterval(updateClock, 1000);
 </script>
@@ -29,9 +34,9 @@ body {background-image: url("1.jpg");  background-size: cover;  background-repea
 </style>
 <!--
   *----------------------------------
-  |  ThisPageVersion: 0.2         |
+  |  ThisPageVersion: 0.3         |
   |  © 2021-2023 By Pusyuu        |
-  |  LastUpdate: 2023-04-23       |
+  |  LastUpdate: 2023-04-24       |
   |  time denote display app      |
 ----------------------------------*
 -->
