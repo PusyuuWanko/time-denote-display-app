@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, user-scalable=yes, maximum-scale=6.0, minimum-scale=1.0">
+<title>時報付き、時刻表示アプリ</title>
+<script>
+function updateClock() {
+  const now = new Date();
+  const hours = now.getHours();
+  const minutes = now.getMinutes();
+  const seconds = now.getSeconds();
+  const time = '${hours}:${minutes}:${seconds}';
+  document.getElementById("clock").innerHTML = now;
+  if (minutes === 0 && seconds === 0) {
+    const my_audio = new Audio("1.mp3");
+    my_audio.currentTime = 0;
+    my_audio.play();
+  }
+}
+setInterval(updateClock, 1000);
+</script>
+<style>
+body {background-image: url("1.jpg");  background-size: cover;  background-repeat: no-repeat;  background-position: center;  background-attachment: fixed;}
+#clock {color: #00ff00; padding: 10px; font-size: 59px;}
+.center {display: flex; justify-content: center; margin-top: 40vh; margin-bottom: 40vh;}
+@media only screen and (max-width:750px){#clock {color: #fff000; font-size: 45px;}.center {margin-top: 25vh; margin-bottom: 25vh;}}
+@media only screen and (max-width:350px){#clock {color: #fff000; font-size: 35px;}}
+</style>
+</head>
+<body>
+<div class="center">
+<div id="clock">
+</div>
+</body>
+</html>
