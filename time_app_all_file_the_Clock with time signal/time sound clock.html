@@ -5,89 +5,99 @@
 <meta name="viewport" content="width=device-width, user-scalable=yes, maximum-scale=6.0, minimum-scale=1.0">
 <title>時報、カレンダー付き、時刻表示アプリ</title>
 <script>
-function updateClock() {
+function updateClockAndCalendar() {
   const now = new Date();
-  const hours = now.getHours();
-  const minutes = now.getMinutes();
-  const seconds = now.getSeconds();
-  const time = '${hours}:${minutes}:${seconds}';
-  document.getElementById("clock").innerHTML = now;
-  if (minutes === 0 && seconds === 0) {
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1;
+  const day = now.getDate();
+  const hour = now.getHours();
+  const min = now.getMinutes();
+  const sec = now.getSeconds();
+  const formattedTime = `${year}:${month}:${day}:${hour}:${min}:${sec}`;
+
+  const clock = document.getElementById("clock");
+  clock.textContent = formattedTime;
+
+  if (min === 0 && sec === 0) {
     const my_audio = new Audio("1.mp3");
     my_audio.currentTime = 0;
     my_audio.play();
   }
-  if (minutes === 30 && seconds === 0) {
+  if (min === 30 && sec === 0) {
     const my_audio = new Audio("2.mp3");
     my_audio.currentTime = 0;
     my_audio.play();
   }
-}
-setInterval(updateClock, 1000);
 
-window.onload = function() {
+  const calendar = document.getElementById("calendar");
 
-const calendar = document.getElementById('calendar');
+  const header = document.createElement("h2");
+  header.classList.add("cal-heder");
+  header.textContent = `${year}年${month}月`;
+  calendar.textContent = "";
 
-const date = new Date();
-const year = date.getFullYear();
-const month = date.getMonth();
+  const table = document.createElement("table");
+  const tbody = document.createElement("tbody");
+  table.appendChild(tbody);
 
-const header = document.createElement('h2');
-header.classList.add('cal-heder');
-header.textContent = `${year}年${month + 1}月`;
-calendar.appendChild(header);
+  const clockRow = document.createElement("tr");
+  const clockCell = document.createElement("td");
+  clockCell.colSpan = 7;
+  clockCell.appendChild(clock);
+  clockRow.appendChild(clockCell);
+  tbody.appendChild(clockRow);
 
-const table = document.createElement('table');
-const tbody = document.createElement('tbody');
-table.appendChild(tbody);
-
-const weekdays = ['日', '月', '火', '水', '木', '金', '土'];
-const tr = document.createElement('tr');
-for (let i = 0; i < weekdays.length; i++) {
-  const th = document.createElement('th');
-  th.textContent = weekdays[i];
-  tr.appendChild(th);
-}
-tbody.appendChild(tr);
-
-const firstDate = new Date(year, month, 1);
-const lastDate = new Date(year, month + 1, 0);
-for (let i = 0; i < 6; i++) {
-  const tr = document.createElement('tr');
-  for (let j = 0; j < 7; j++) {
-    const td = document.createElement('td');
-    const day = i * 7 + j - firstDate.getDay() + 1;
-    if (day > 0 && day <= lastDate.getDate()) {
-      td.textContent = day;
-    }
-    tr.appendChild(td);
+  const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
+  const weekdaysRow = document.createElement("tr");
+  for (let i = 0; i < weekdays.length; i++) {
+    const th = document.createElement("th");
+    th.textContent = weekdays[i];
+    weekdaysRow.appendChild(th);
   }
-  tbody.appendChild(tr);
+  tbody.appendChild(weekdaysRow);
+
+  const firstDate = new Date(year, month - 1, 1);
+  const lastDate = new Date(year, month, 0);
+  for (let i = 0; i < 6; i++) {
+    const dateRow = document.createElement("tr");
+    for (let j = 0; j < 7; j++) {
+      const dateCell = document.createElement("td");
+      const date = i * 7 + j - firstDate.getDay() + 1;
+      if (date > 0 && date <= lastDate.getDate()) {
+        dateCell.textContent = date;
+        if (date === day) {
+          dateCell.classList.add("current-date");
+        }
+      }
+      dateRow.appendChild(dateCell);
+    }
+    tbody.appendChild(dateRow);
+  }
+
+  calendar.appendChild(table);
 }
 
-calendar.appendChild(table);
-
-};
+setInterval(updateClockAndCalendar, 1000);
 </script>
 <style>
 body {background-image: url("1.jpg");  background-size: cover;  background-repeat: no-repeat;  background-position: center;  background-attachment: fixed;}
 #clock {color: #00ff00; font-size: 50px;}
 main {margin-top: 40vh; margin-bottom: 40vh; background-color: rgba(0,0,0,0.5); border-radius: 10px;}
 .article { display: flex; justify-content: center; padding: 25px;}
-@media only screen and (max-width:750px){#clock {color: #fff000; font-size: 45px;}.center {margin-top: 25vh; margin-bottom: 25vh;}}
-@media only screen and (max-width:350px){#clock {color: #fff000; font-size: 35px;}}
+@media only screen and (max-width:750px){#clock {color: #fff000; font-size: 30px;}.center {margin-top: 25vh; margin-bottom: 25vh;}}
+@media only screen and (max-width:350px){#clock {color: #fff000; font-size: 20px;}}
 .cal-heder {  color: #00ffff; border: 1px solid #fff; padding: 3px; margin: 0;}
 table {  border-collapse: collapse;}
-th,td {  border: 1px solid #fff;  padding: 8px;  text-align: center;  color: #fff000;}
+th,td {  border: 1px solid #fff;  padding: 5px;  text-align: center;  color: #fff000;}
 th {  background-color: #fff;  color: #000fff;}
 td:hover {  color: #fff;}
+.current-date {  background-color: #333; color: #fff;}
 </style>
 <!--
   *----------------------------------
-  |  ThisPageVersion: 1.1         |
+  |  ThisPageVersion: 1.2         |
   |  © 2021-2023 By Pusyuu        |
-  |  LastUpdate: 2023-05-06       |
+  |  LastUpdate: 2023-05-18       |
   |  time denote display app      |
 ----------------------------------*
 -->
