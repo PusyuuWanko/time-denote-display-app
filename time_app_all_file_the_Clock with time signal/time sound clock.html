@@ -2,10 +2,11 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, user-scalable=yes, maximum-scale=6.0, minimum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>時報、カレンダー付き、時刻表示アプリ</title>
 <script>
 function updateClockAndCalendar() {
+  // 現在の時刻と日付を取得
   const now = new Date();
   const year = now.getFullYear();
   const month = now.getMonth() + 1;
@@ -13,27 +14,21 @@ function updateClockAndCalendar() {
   const hour = now.getHours();
   const min = now.getMinutes();
   const sec = now.getSeconds();
-  const formattedTime = `${year}:${month}:${day}:${hour}:${min}:${sec}`;
 
+  const formattedTime = `${addZero(hour)}:${addZero(min)}:${addZero(sec)}`;
+  function addZero(number) {
+    return number < 10 ? `0${number}` : number;
+  }
+  
+  // 時刻表示の要素を取得
   const clock = document.getElementById("clock");
   clock.textContent = formattedTime;
 
-  if (min === 0 && sec === 0) {
-    const my_audio = new Audio("1.mp3");
-    my_audio.currentTime = 0;
-    my_audio.play();
-  }
-  if (min === 30 && sec === 0) {
-    const my_audio = new Audio("2.mp3");
-    my_audio.currentTime = 0;
-    my_audio.play();
-  }
+  playChime(hour, min, sec);
 
+  // カレンダー表示の要素を取得
   const calendar = document.getElementById("calendar");
 
-  const header = document.createElement("h2");
-  header.classList.add("cal-heder");
-  header.textContent = `${year}年${month}月`;
   calendar.textContent = "";
 
   const table = document.createElement("table");
@@ -47,6 +42,25 @@ function updateClockAndCalendar() {
   clockRow.appendChild(clockCell);
   tbody.appendChild(clockRow);
 
+  const firstDate = new Date(year, month - 1, 1);
+  const lastDate = new Date(year, month, 0);
+
+  const chimeToggle = document.createElement("span");
+  chimeToggle.id = "chime-toggle";
+  chimeToggle.textContent = "チャイムオン";
+  chimeToggle.classList.add("chime-toggle");
+  chimeToggle.onclick = toggleChime;
+  clockCell.appendChild(chimeToggle);
+
+  // 年と月を表示する部分を追加
+  const yearMonthRow = document.createElement("tr");
+  const yearMonthCell = document.createElement("td");
+ yearMonthCell.classList.add("yearMonth");
+  yearMonthCell.colSpan = 7;
+  yearMonthCell.textContent = `${year}年${month}月`;
+  yearMonthRow.appendChild(yearMonthCell);
+  tbody.appendChild(yearMonthRow);
+
   const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
   const weekdaysRow = document.createElement("tr");
   for (let i = 0; i < weekdays.length; i++) {
@@ -56,8 +70,6 @@ function updateClockAndCalendar() {
   }
   tbody.appendChild(weekdaysRow);
 
-  const firstDate = new Date(year, month - 1, 1);
-  const lastDate = new Date(year, month, 0);
   for (let i = 0; i < 6; i++) {
     const dateRow = document.createElement("tr");
     for (let j = 0; j < 7; j++) {
@@ -77,27 +89,127 @@ function updateClockAndCalendar() {
   calendar.appendChild(table);
 }
 
+function playChime(hour, min, sec) {
+  if (!isChimeEnabled) {
+    return;
+  }
+
+  if (min === 0 && sec === 0) {
+    const my_audio = new Audio("1.mp3");
+    my_audio.currentTime = 0;
+    my_audio.play();
+  }
+  if (min === 30 && sec === 0) {
+    const my_audio = new Audio("2.mp3");
+    my_audio.currentTime = 0;
+    my_audio.play();
+  }
+}
+function toggleChime() {
+  const chimeToggle = document.getElementById("chime-toggle");
+  isChimeEnabled = !isChimeEnabled;
+
+  if (isChimeEnabled) {
+    chimeToggle.textContent = "チャイムオン";
+  } else {
+    chimeToggle.textContent = "チャイムオフ";
+  }
+}
+
+let isChimeEnabled = true;
+
 setInterval(updateClockAndCalendar, 1000);
 </script>
 <style>
-body {background-image: url("1.jpg");  background-size: cover;  background-repeat: no-repeat;  background-position: center;  background-attachment: fixed;}
-#clock {color: #00ff00; font-size: 50px;}
-main {margin-top: 40vh; margin-bottom: 40vh; background-color: rgba(0,0,0,0.5); border-radius: 10px;}
-.article { display: flex; justify-content: center; padding: 25px;}
-@media only screen and (max-width:750px){#clock {color: #fff000; font-size: 30px;}.center {margin-top: 25vh; margin-bottom: 25vh;}}
-@media only screen and (max-width:350px){#clock {color: #fff000; font-size: 20px;}}
-.cal-heder {  color: #00ffff; border: 1px solid #fff; padding: 3px; margin: 0;}
-table {  border-collapse: collapse;}
-th,td {  border: 1px solid #fff;  padding: 5px;  text-align: center;  color: #fff000;}
-th {  background-color: #fff;  color: #000fff;}
-td:hover {  color: #fff;}
-.current-date {  background-color: #333; color: #fff;}
+body {
+  background-image: url("1.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: fixed;
+  margin: 0;
+  padding: 0;
+}
+
+#clock {
+  color: #00ff00;
+  font-size: 50px;
+  padding: 10px;
+}
+
+.chime-toggle {
+  color: #ff0000;
+  cursor: pointer;
+}
+
+.yearMonth {
+  color: #fff;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  border: 1px solid #fff;
+  padding: 8px;
+  text-align: center;
+  color: #fff000;
+}
+
+th {
+  background-color: #fff;
+  color: #000fff;
+}
+
+td:hover {
+  color: #fff;
+  background-color: #333;
+}
+
+.current-date {
+  background-color: #333;
+  color: #fff;
+}
+
+main {
+  margin: 0 auto;
+  max-width: 250px;
+  margin-top: 40vh;
+  margin-bottom: 40vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+}
+
+.article {
+  display: flex;
+  justify-content: center;
+  padding: 25px;
+}
+
+@media only screen and (max-width: 750px) {
+  #clock {
+    color: #41c6e0;
+    font-size: 30px;
+  }
+}
+
+@media only screen and (max-width: 350px) {
+  #clock {
+    font-size: 20px;
+  }
+  th, td {
+    padding: 5px;
+  }
+}
+
 </style>
 <!--
   *----------------------------------
-  |  ThisPageVersion: 1.2         |
+  |  ThisPageVersion: 1.3         |
   |  © 2021-2023 By Pusyuu        |
-  |  LastUpdate: 2023-05-18       |
+  |  LastUpdate: 2023-05-19       |
   |  time denote display app      |
 ----------------------------------*
 -->
@@ -107,8 +219,6 @@ td:hover {  color: #fff;}
 <div class="center">
 <article class="article">
 <div id="clock"></div>
-</article>
-<article class="article">
 <div id="calendar"></div>
 </article>
 </div>
