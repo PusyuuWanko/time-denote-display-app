@@ -45,13 +45,6 @@ function updateClockAndCalendar() {
   const firstDate = new Date(year, month - 1, 1);
   const lastDate = new Date(year, month, 0);
 
-  const chimeToggle = document.createElement("span");
-  chimeToggle.id = "chime-toggle";
-  chimeToggle.textContent = "チャイムオン";
-  chimeToggle.classList.add("chime-toggle");
-  chimeToggle.onclick = toggleChime;
-  clockCell.appendChild(chimeToggle);
-
   // 年と月を表示する部分を追加
   const yearMonthRow = document.createElement("tr");
   const yearMonthCell = document.createElement("td");
@@ -116,7 +109,7 @@ function toggleChime() {
   }
 }
 
-let isChimeEnabled = true;
+let isChimeEnabled = false;
 
 setInterval(updateClockAndCalendar, 1000);
 </script>
@@ -137,9 +130,12 @@ body {
   padding: 10px;
 }
 
-.chime-toggle {
+#chime-toggle {
   color: #ff0000;
   cursor: pointer;
+  border: 1px solid #fff;
+  padding: 3px;
+  width: 17px;
 }
 
 .yearMonth {
@@ -174,8 +170,7 @@ td:hover {
 }
 
 main {
-  margin: 0 auto;
-  max-width: 250px;
+  margin: 10px;
   margin-top: 40vh;
   margin-bottom: 40vh;
   background-color: rgba(0, 0, 0, 0.5);
@@ -200,16 +195,16 @@ main {
     font-size: 20px;
   }
   th, td {
-    padding: 5px;
+    padding: 3px;
   }
 }
 
 </style>
 <!--
   *----------------------------------
-  |  ThisPageVersion: 1.3         |
+  |  ThisPageVersion: 1.4         |
   |  © 2021-2023 By Pusyuu        |
-  |  LastUpdate: 2023-05-19       |
+  |  LastUpdate: 2023-05-20       |
   |  time denote display app      |
 ----------------------------------*
 -->
@@ -220,6 +215,7 @@ main {
 <article class="article">
 <div id="clock"></div>
 <div id="calendar"></div>
+<div id="chime-toggle" onclick="toggleChime()">チャイムオフ</div>
 </article>
 </div>
 </main>
