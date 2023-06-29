@@ -6,6 +6,6 @@
 使い方はtime_denote_display_app.htmlを開くだけです。
 動かなかった場合はtime_denote_display_app_all_file_var_.htmlを開いてください。
 
-# ※注意点↓
+## ※注意点↓
 OSによっては機能しない場合があります。
 デザインが少し古い理由は古めのデバイスでもデザインを崩さないようにするためです。
